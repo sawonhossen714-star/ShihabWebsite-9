@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌍 বিশ্ব মুদ্রা কনভার্টার ও ভাষা শিক্ষা - BDT Exchange</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #36d1dc, #5b86e5);
+      color: white;
+      text-align: center;
+      padding: 0;
+      margin: 0;
+      overflow: hidden; /* স্ক্রল বার লুকানোর জন্য */
+    }
+    .splash-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #36d1dc, #5b86e5);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      transition: opacity 0.5s ease-in-out;
+    }
+    .splash-image {
+        width: 80%;
+        max-width: 300px;
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        margin-bottom: 30px;
+    }
+    .progress-container {
+      width: 80%;
+      max-width: 300px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+    .progress-bar {
+      height: 20px;
+      width: 0%;
+      background-color: #ffcc00;
+      border-radius: 20px;
+      text-align: center;
+      line-height: 20px;
+      color: #333;
+      font-weight: bold;
+      transition: width 0.1s linear;
+    }
+    .app-box {
+      background: rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 25px;
+      max-width: 420px;
+      margin: 20px auto; /* মার্জিন ঠিক করা হলো */
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    /* হোম স্ক্রিন এর জন্য অতিরিক্ত CSS */
+    .home-screen img {
+        width: 100%;
+        max-width: 400px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .home-buttons button {
+        width: 100%;
+        margin-bottom: 15px;
+        padding: 15px;
+        font-size: 18px;
+    }
+    /* ভাষা শিক্ষার পেজের জন্য */
+    .language-section h3 {
+        color: #ffcc00;
+        border-bottom: 2px solid rgba(255, 204, 0, 0.5);
+        padding-bottom: 5px;
+        margin-top: 25px;
+    }
+    .word-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px dashed rgba(255, 255, 255, 0.3);
+        text-align: right;
+    }
+    .arabic {
+        font-family: 'Arial', sans-serif;
+        font-size: 20px;
+        font-weight: bold;
+        flex: 1;
+        text-align: left;
+    }
+    .bengali {
+        flex: 2;
+        text-align: right;
+        font-size: 16px;
+    }
+
+    /* অন্যান্য উপাদান */
+    select, input, button {
+      width: 85%;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    button {
+      background: #ffcc00;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #ffe066;
+      transform: scale(1.02);
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      background: rgba(0,0,0,0.25);
+      padding: 10px;
+      border-radius: 10px;
+    }
+    footer {
+      margin-top: 20px;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+    #main-content {
+        display: none;
+        padding: 20px;
+        overflow-y: auto; /* মূল কন্টেন্টের জন্য স্ক্রলবার */
+        height: 100vh; /* পুরো ভিউপোর্ট হাইট */
+        box-sizing: border-box;
+    }
+    .hidden {
+        display: none !important;
+    }
+  </style>
+</head>
+<body>
+    <div id="splashScreen" class="splash-screen">
+        <img src="https://i.postimg.cc/PqX46fbC/IMG-20251016-204152.jpg" alt="Loading Image" class="splash-image">
+        <div class="progress-container">
+            <div id="progressBar" class="progress-bar">0%</div>
+        </div>
+        <p style="margin-top: 15px;">অ্যাপ লোড হচ্ছে...</p>
+    </div>
+
+    <div id="main-content">
+
+      <div id="homeScreen" class="app-box home-screen">
+        <h2>স্বাগতম</h2>
+        <img src="https://i.postimg.cc/vB01hbY2/IMG-20251016-205626.jpg" alt="সৌদি আরবের দৃশ্য">
+
+        <div class="home-buttons">
+            <button onclick="showLanguageScreen()">🇸🇦 সৌদি ভাষা শিক্ষা</button>
+            <img src="https://i.postimg.cc/1Xzv7mpN/IMG-20251016-210054.jpg" alt="টাকার চিত্র">
+            <button onclick="showConverterScreen()">💱 টাকার রেট (মুদ্রা রূপান্তর)</button>
+        </div>
+      </div>
+
+      <div id="converterScreen" class="app-box hidden">
+        <button onclick="showHomeScreen()" style="margin-bottom: 15px; background: #66ccff;">⬅️ পিছনে যান</button>
+        <h2>🌍 বিশ্ব মুদ্রা কনভার্টার</h2>
+        <p>যেকোনো দেশ ও টাকার মান রূপান্তর করুন</p>
+
+        <select id="fromCurrency">
+          <option value="BDT">🇧🇩 বাংলাদেশি টাকা (BDT)</option>
+          <option value="USD">🇺🇸 মার্কিন ডলার (USD)</option>
+          <option value="EUR">🇪🇺 ইউরো (EUR)</option>
+          <option value="INR">🇮🇳 ভারতীয় রুপি (INR)</option>
+          <option value="MYR">🇲🇾 মালয়েশিয়ান রিংগিত (MYR)</option>
+          <option value="SAR">🇸🇦 সৌদি রিয়াল (SAR)</option>
+          <option value="AED">🇦🇪 দিরহাম (AED)</option>
+          <option value="GBP">🇬🇧 পাউন্ড (GBP)</option>
+          <option value="SGD">🇸🇬 সিঙ্গাপুর ডলার (SGD)</option>
+          <option value="CAD">🇨🇦 কানাডিয়ান ডলার (CAD)</option>
+          <option value="AUD">🇦🇺 অস্ট্রেলিয়ান ডলার (AUD)</option>
+        </select>
+
+        <select id="toCurrency">
+          <option value="BDT">🇧🇩 বাংলাদেশি টাকা (BDT)</option>
+          <option value="USD">🇺🇸 মার্কিন ডলার (USD)</option>
+          <option value="EUR">🇪🇺 ইউরো (EUR)</option>
+          <option value="INR">🇮🇳 ভারতীয় রুপি (INR)</option>
+          <option value="MYR">🇲🇾 মালয়েশিয়ান রিংগিত (MYR)</option>
+          <option value="SAR">🇸🇦 সৌদি রিয়াল (SAR)</option>
+          <option value="AED">🇦🇪 দিরহাম (AED)</option>
+          <option value="GBP">🇬🇧 পাউন্ড (GBP)</option>
+          <option value="SGD">🇸🇬 সিঙ্গাপুর ডলার (SGD)</option>
+          <option value="CAD">🇨🇦 কানাডিয়ান ডলার (CAD)</option>
+          <option value="AUD">🇦🇺 অস্ট্রেলিয়ান ডলার (AUD)</option>
+        </select>
+
+        <input type="number" id="amount" placeholder="যেমন: 100" />
+
+        <button onclick="convert()">💱 রূপান্তর করুন</button>
+
+        <div id="result">ফলাফল এখানে দেখা যাবে</div>
+        <footer>💡 ইন্টারনেট থাকলে লাইভ রেট, না থাকলে অফলাইন রেট ব্যবহৃত হবে</footer>
+      </div>
+
+      <div id="languageScreen" class="app-box hidden">
+        <button onclick="showHomeScreen()" style="margin-bottom: 15px; background: #66ccff;">⬅️ পিছনে যান</button>
+        <h2>🇸🇦 সৌদি ভাষা শিক্ষা</h2>
+        <p>আরবি শব্দ ও তার বাংলা উচ্চারণ</p>
+
+        <div class="language-section">
+            <h3>১. মাসের নাম (شهور)</h3>
+            <div class="word-item"><span class="arabic">জানাইর / কানু-ন স-নি</span><span class="bengali">জানুয়ারি</span></div>
+            <div class="word-item"><span class="arabic">ফেবাইর / সাবাহ</span><span class="bengali">ফেব্রুয়ারি</span></div>
+            <div class="word-item"><span class="arabic">মারিচ / আ-জার</span><span class="bengali">মার্চ</span></div>
+            <div class="word-item"><span class="arabic">আব্রীল / নি-সান</span><span class="bengali">এপ্রিল</span></div>
+            <div class="word-item"><span class="arabic">মা-ইউ / আই-য়ার</span><span class="bengali">মে</span></div>
+            <div class="word-item"><span class="arabic">জু-নি-ইউ / হা-যি-রান</span><span class="bengali">জুন</span></div>
+            <div class="word-item"><span class="arabic">জু-লি-ইউ / তাম-মুয</span><span class="bengali">জুলাই</span></div>
+            <div class="word-item"><span class="arabic">আগোসতো / আব</span><span class="bengali">আগস্ট</span></div>
+            <div class="word-item"><span class="arabic">সেবতেমবাইর / আয়লুল</span><span class="bengali">সেপ্টেম্বর</span></div>
+            <div class="word-item"><span class="arabic">ওকতোবার / তিশ-রিন আও-য়াল</span><span class="bengali">অক্টোবর</span></div>
+            <div class="word-item"><span class="arabic">নো-ফাম-বার / তিশ-রিন স-নি</span><span class="bengali">নভেম্বর</span></div>
+            <div class="word-item"><span class="arabic">দিসামবার / কা-নু-ন আও-য়াল</span><span class="bengali">ডিসেম্বর</span></div>
+        </div>
+
+        <div class="language-section">
+            <h3>২. দিনের নাম (أيام)</h3>
+            <div class="word-item"><span class="arabic">ইয়াওমুস সাবত</span><span class="bengali">শনিবার</span></div>
+            <div class="word-item"><span class="arabic">ইয়াওমুল আহাদ</span><span class="bengali">রবিবার</span></div>
+            <div class="word-item"><span class="arabic">ইয়াওমুল ইতনাইন</span><span class="bengali">সোমবার</span></div>
+            <div class="word-item"><span class="arabic">ইয়াওমুস সুলাসা</span><span class="bengali">মঙ্গলবার</span></div>
+            <div class="word-item"><span class="arabic">ইয়াওমুল আরবিআ</span><span class="bengali">বুধবার</span></div>
+            <div class="word-item"><span class="arabic">ইয়াওমুল খামিস</span><span class="bengali">বৃহস্পতিবার</span></div>
+            <div class="word-item"><span class="arabic">ইয়াওমুল জুমুআ</span><span class="bengali">শুক্রবার</span></div>
+        </div>
+
+        <div class="language-section">
+            <h3>৩. ফলের নাম (فواكه)</h3>
+            <div class="word-item"><span class="arabic">তুম্ম/খুরমা</span><span class="bengali">খেজুর</span></div>
+            <div class="word-item"><span class="arabic">মাউয</span><span class="bengali">কলা</span></div>
+            <div class="word-item"><span class="arabic">বি-ত্তিখ</span><span class="bengali">তরমুজ</span></div>
+            <div class="word-item"><span class="arabic">তুফ্ফা-হ</span><span class="bengali">আপেল</span></div>
+            <div class="word-item"><span class="arabic">বুরতুকাল</span><span class="bengali">কমলা</span></div>
+            <div class="word-item"><span class="arabic">ইনাব</span><span class="bengali">আঙুর</span></div>
+            <div class="word-item"><span class="arabic">মানা</span><span class="bengali">আম</span></div>
+        </div>
+      </div>
+
+    </div>
+
+
+  <script>
+    // 🪙 অফলাইন রেটসমূহ
+    const offlineRates = {
+      USD: 119.5,
+      EUR: 126.0,
+      INR: 1.42,
+      MYR: 26.0,
+      SAR: 31.8,
+      AED: 32.5,
+      GBP: 148.0,
+      SGD: 88.0,
+      CAD: 87.0,
+      AUD: 79.0,
+      BDT: 1
+    };
+
+    // --- স্ক্রিন পরিবর্তন ফাংশন ---
+    const homeScreen = document.getElementById('homeScreen');
+    const converterScreen = document.getElementById('converterScreen');
+    const languageScreen = document.getElementById('languageScreen');
+
+    function showScreen(screenToShow) {
+        homeScreen.classList.add('hidden');
+        converterScreen.classList.add('hidden');
+        languageScreen.classList.add('hidden');
+        screenToShow.classList.remove('hidden');
+    }
+
+    function showHomeScreen() {
+        showScreen(homeScreen);
+    }
+
+    function showConverterScreen() {
+        showScreen(converterScreen);
+    }
+
+    function showLanguageScreen() {
+        showScreen(languageScreen);
+    }
+
+    // --- মুদ্রা রূপান্তর ফাংশন ---
+    async function convert() {
+      const from = document.getElementById('fromCurrency').value;
+      const to = document.getElementById('toCurrency').value;
+      const amount = parseFloat(document.getElementById('amount').value);
+      const resultDiv = document.getElementById('result');
+
+      if (!amount || amount <= 0) {
+        resultDiv.innerText = "অনুগ্রহ করে সঠিক পরিমাণ লিখুন";
+        return;
+      }
+
+      let rate = 1;
+
+      // প্রথমে অফলাইন রেট ধরে হিসাব করা
+      if (from === to) {
+        rate = 1;
+      } else {
+        rate = offlineRates[to] / offlineRates[from];
+      }
+
+      // এখন চেষ্টা করবে অনলাইন রেট নেওয়ার
+      try {
+        // Exchange Rate API এর মাধ্যমে অনলাইন রেট আনা
+        const res = await fetch(`https://api.exchangerate.host/latest?base=${from}&symbols=${to}`);
+        const data = await res.json();
+        if (data && data.rates && data.rates[to]) {
+          rate = data.rates[to];
+        }
+      } catch (err) {
+        console.log("ইন্টারনেট সংযোগ না থাকায় অফলাইন রেট ব্যবহৃত হচ্ছে:", err);
+      }
+
+      const converted = (amount * rate).toFixed(2);
+      resultDiv.innerHTML = `
+        💰 ${amount} ${from} = ${converted} ${to}<br>
+        <small>১ ${from} = ${rate.toFixed(3)} ${to}</small>
+      `;
+    }
+
+    // --- স্প্ল্যাশ স্ক্রিন লজিক ---
+    const splashScreen = document.getElementById('splashScreen');
+    const progressBar = document.getElementById('progressBar');
+    const mainContent = document.getElementById('main-content');
+    let progress = 0;
+    const duration = 5000; // 5 সেকেন্ড
+    const intervalTime = duration / 100;
+
+    function updateProgress() {
+      if (progress < 100) {
+        progress++;
+        progressBar.style.width = progress + '%';
+        progressBar.innerText = progress + '%';
+        setTimeout(updateProgress, intervalTime);
+      } else {
+        // প্রগ্রেস ১০০% হলে স্প্ল্যাশ স্ক্রিন লুকাও এবং মূল কন্টেন্ট (হোম স্ক্রিন) দেখাও
+        splashScreen.style.opacity = '0';
+        setTimeout(() => {
+          splashScreen.style.display = 'none';
+          mainContent.style.display = 'block';
+          document.body.style.overflow = 'auto'; // স্ক্রলবার আবার চালু করা হলো
+        }, 500);
+      }
+    }
+
+    window.onload = updateProgress;
+
+  </script>
+</body>
+</html>
